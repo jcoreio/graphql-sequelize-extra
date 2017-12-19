@@ -6,9 +6,7 @@ environment:
 
 hooks:
   pre_setup: yarn --ignore-scripts
-  post_build:
-    - 'echo NPM_TOKEN: ${NPM_TOKEN}'
-    - npm run semantic-release
+  post_build: 'echo NPM_TOKEN: ${NPM_TOKEN}; npm run semantic-release'
 
 tests:
   - yarn run prepublish
