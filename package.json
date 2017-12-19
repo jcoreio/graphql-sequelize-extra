@@ -19,7 +19,7 @@
     "prepush": "npm test",
     "prepublish": "npm run lint && flow && npm test && npm run build",
     "open:coverage": "open coverage/lcov-report/index.html",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release"
   },
   "config": {
     "mocha": "--compilers js:babel-core/register ./test/index.js",
@@ -86,7 +86,7 @@
     "nyc": "^10.1.2",
     "pg": "^7.4.0",
     "rimraf": "^2.6.0",
-    "semantic-release": "^8.2.0",
+    "semantic-release": "^11.0.0",
     "sequelize": "^4.28.6"
   },
   "peerDependencies": {
@@ -98,6 +98,11 @@
     "access": "restricted"
   },
   "release": {
-    "verifyConditions": "@jcoreio/condition-solano"
+    "verifyConditions": [
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@jcoreio/condition-solano"
+    ]
   }
 }
+
