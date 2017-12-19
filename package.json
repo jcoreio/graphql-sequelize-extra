@@ -98,10 +98,6 @@
     "access": "restricted"
   },
   "release": {
-    "verifyConditions": [
-      "@semantic-release/npm",
-      "@semantic-release/github",
-      "@jcoreio/condition-solano"
-    ]
+    "verifyConditions": "@jcoreio/condition-solano"
   }
 }
