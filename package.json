@@ -1,5 +1,5 @@
 {
-  "name": "graphql-esquelize-extra",
+  "name": "@jcoreio/graphql-sequelize-extra",
   "version": "0.0.0-development",
   "description": "some missing pieces of the graphql-sequelize bridge",
   "main": "lib/index.js",
@@ -22,7 +22,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "config": {
-    "mocha": "--compilers js:babel-core/register ./test/**/*.js",
+    "mocha": "--compilers js:babel-core/register ./test/index.js",
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
@@ -39,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jcoreio/graphql-esquelize-extra.git"
+    "url": "https://github.com/jcoreio/graphql-sequelize-extra.git"
   },
   "keywords": [
     "es2015"
@@ -47,9 +47,9 @@
   "author": "Andy Edwards",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jcoreio/graphql-esquelize-extra/issues"
+    "url": "https://github.com/jcoreio/graphql-sequelize-extra/issues"
   },
-  "homepage": "https://github.com/jcoreio/graphql-esquelize-extra#readme",
+  "homepage": "https://github.com/jcoreio/graphql-sequelize-extra#readme",
   "devDependencies": {
     "@commitlint/cli": "^5.2.5",
     "@commitlint/config-conventional": "^5.2.3",
@@ -74,11 +74,23 @@
     "flow-bin": "^0.61.0",
     "flow-copy-source": "^1.2.1",
     "flow-watch": "^1.1.0",
+    "glob": "^7.1.2",
+    "graphql": "^0.12.3",
+    "graphql-relay": "^0.5.4",
+    "graphql-sequelize": "^5.6.1",
     "husky": "^0.13.1",
     "istanbul": "^0.4.5",
+    "lodash.mapvalues": "^4.6.0",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
+    "pg": "^7.4.0",
     "rimraf": "^2.6.0",
-    "semantic-release": "^6.3.6"
+    "semantic-release": "^6.3.6",
+    "sequelize": "^4.28.6"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.3",
+    "graphql-sequelize": "^5.6.0",
+    "sequelize": "^4.0.0"
   }
 }

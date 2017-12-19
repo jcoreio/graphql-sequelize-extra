@@ -1,4 +1,6 @@
-/* @flow */
+// @flow
 
-/* eslint-disable no-console, no-undef */
-console.log('Hello world!')
+import associationFields from './associationFields'
+
+exports.associationFields = associationFields
+
