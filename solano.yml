@@ -9,7 +9,7 @@ hooks:
   post_build: npm run semantic-release
 
 tests:
-  - yarn test
+  - yarn run prepublish
 
 cache:
   key_paths:

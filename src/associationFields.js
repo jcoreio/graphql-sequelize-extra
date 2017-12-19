@@ -10,7 +10,7 @@ const {HasOne, BelongsTo, HasMany, BelongsToMany} = Association
 type Options = {
   getType: (model: Class<Model<any>>) => ?Object,
   getArgs?: (model: Class<Model<any>>) => ?{[name: string]: any},
-  getResolver?: (model: Class<Model<any>>, association: Association) => Function,
+  getResolver?: <T: Model<any>>(model: Class<T>, association: Association<T, Model<any>>) => Function,
 }
 
 type Field = {
@@ -33,12 +33,12 @@ function associationFields(
     const {target, as} = association
 
     let type = getType(target)
-    if (!type) throw new Error(`missing type for model: ${target}`)
+    if (!type) throw new Error(`missing type for model: ${String(target)}`)
 
     const args = getArgs(target)
 
     const resolve = getResolver(target, association)
-    if (!resolve) throw new Error(`missing resolver for model: ${target}, association: ${association}`)
+    if (!resolve) throw new Error(`missing resolver for model: ${String(target)}, association: ${String(association)}`)
 
     let fieldName
 
