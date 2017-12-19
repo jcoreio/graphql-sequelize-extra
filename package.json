@@ -53,6 +53,7 @@
   "devDependencies": {
     "@commitlint/cli": "^5.2.5",
     "@commitlint/config-conventional": "^5.2.3",
+    "@jcoreio/condition-solano": "^1.0.0",
     "@jedwards1211/eslint-config": "^1.0.0",
     "@jedwards1211/eslint-config-flow": "^1.0.0",
     "babel-cli": "^6.23.0",
@@ -95,5 +96,12 @@
   },
   "publishConfig": {
     "access": "restricted"
+  },
+  "release": {
+    "verifyConditions": [
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@jcoreio/condition-solano"
+    ]
   }
 }
