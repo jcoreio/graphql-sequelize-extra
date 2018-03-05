@@ -18,6 +18,10 @@ hooks:
     ln -fs $HOME/.yarn/bin/yarn $HOME/bin/yarn
     yarn config set registry https://registry.npmjs.org/
     echo $NPM_TOKEN >> $HOME/.npmrc
+    echo .npmrc
+    cat $HOME/.npmrc
+    echo .yarnrc
+    cat $HOME/.yarnrc
     yarn --version
     yarn --ignore-scripts
   post_build: npm run semantic-release
