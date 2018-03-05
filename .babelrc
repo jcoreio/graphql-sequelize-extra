@@ -1,5 +1,5 @@
 {
-  "presets": ["es2015", "stage-1", "flow"],
+  "presets": [["env", {"targets": {"node": "current"}}], "stage-1", "flow"],
   "plugins": ["transform-runtime"],
   "env": {
     "test": {

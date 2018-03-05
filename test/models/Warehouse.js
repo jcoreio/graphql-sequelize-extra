@@ -66,7 +66,7 @@ export default class Warehouse extends Model<WarehouseAttributes, WarehouseInitA
   countProducts: HasManyCount
 
   static initAttributes({sequelize}: {sequelize: Sequelize}) {
-    Warehouse.init({
+    super.init({
       address: {type: Sequelize.STRING, allowNull: false},
       squareFootage: {type: Sequelize.DECIMAL},
     }, {sequelize})

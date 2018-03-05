@@ -16,7 +16,7 @@ export default class WarehouseBranch extends Model<WarehouseBranchAttributes, Wa
   BranchId: number;
 
   static initAttributes({sequelize}: {sequelize: Sequelize}) {
-    WarehouseBranch.init({
+    super.init({
       WarehouseId: {type: Sequelize.INTEGER, allowNull: true, references: 'Warehouse'},
       BranchId: {type: Sequelize.INTEGER, allowNull: true, references: 'Branch'},
     }, {

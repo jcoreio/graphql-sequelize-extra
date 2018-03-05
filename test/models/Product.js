@@ -26,7 +26,7 @@ export default class Product extends Model<ProductAttributes, ProductInitAttribu
   WarehouseId: ?number;
 
   static initAttributes({sequelize}: {sequelize: Sequelize}) {
-    Product.init({
+    super.init({
       name: {type: Sequelize.STRING, allowNull: false},
       weight: {type: Sequelize.DECIMAL, allowNull: false},
     }, {sequelize})

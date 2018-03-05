@@ -38,7 +38,7 @@ export default class Customer extends Model<CustomerAttributes, CustomerInitAttr
   phone: ?string;
 
   static initAttributes({sequelize}: {sequelize: Sequelize}) {
-    Customer.init({
+    super.init({
       firstName: {type: Sequelize.STRING, allowNull: false},
       lastName: {type: Sequelize.STRING, allowNull: false},
       address: {type: Sequelize.STRING},

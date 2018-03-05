@@ -13,21 +13,15 @@ type Options = {
   getResolver?: <T: Model<any>>(model: Class<T>, association: Association<T, Model<any>>) => Function,
 }
 
-type Field = {
-  type: Object,
-  args?: {[name: string]: any},
-  resolve: Function,
-}
-
-function associationFields(
+function associationFields<TSource, TContext>(
   model: Class<Model<any>>,
   options: Options,
-): {[name: string]: Field} {
+): graphql.GraphQLFieldConfigMap<TSource, TContext> {
   const {getType} = options
   const getArgs = options.getArgs || defaultArgs
   const getResolver = options.getResolver || ((model, association) => resolver(association))
 
-  const result: {[name: string]: Field} = {}
+  const result: graphql.GraphQLFieldConfigMap<TSource, TContext> = {}
   for (let key in model.associations) {
     const association = model.associations[key]
     const {target, as} = association
