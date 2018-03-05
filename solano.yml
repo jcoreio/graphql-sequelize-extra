@@ -6,7 +6,9 @@ environment:
   'CI': 'true'
 
 hooks:
-  pre_setup: npm i -g yarn@^1.0.0 && yarn --ignore-scripts
+  pre_setup: |
+    sudo npm i -g yarn@^1.0.0
+    yarn --ignore-scripts
   post_build: npm run semantic-release
 
 tests:
