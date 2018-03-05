@@ -1,6 +1,7 @@
 nodejs:
   version: '8.9'
-
+postgresql:
+  version: '9.3'
 environment:
   'CI': 'true'
 
