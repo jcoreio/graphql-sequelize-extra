@@ -23,7 +23,7 @@ export type Options<InitAttributes: Object, Instance: Model<any, InitAttributes>
     context: Context,
     info: graphql.GraphQLResolveInfo
   ) => PromiseOrValue<any>,
-  updateOptions?: UpdateOptions<InitAttributes>,
+  updateOptions?: $Shape<UpdateOptions<InitAttributes>>,
 }
 
 export default function updateOneMutation<InitAttributes: Object, Instance: Model<any, InitAttributes>, Source, Context>({
