@@ -35,11 +35,11 @@ export default function destroyMutation<InitAttributes: Object, Instance: Model<
       const pk = model.primaryKeyAttribute
       if (!where) {
         where = {}
-        if (pk && !args.hasOwnProperty(pk)) {
+        if (pk && args[pk] == null) {
           throw new Error('You must provide where or the primary key')
         }
       }
-      if (pk && args.hasOwnProperty(pk)) where[pk] = args[pk]
+      if (pk && args[pk] != null) where[pk] = args[pk]
       let finalDestroyOptions
       if (destroyOptions) {
         if (destroyOptions.where) where = {...where, ...(destroyOptions.where: any)}

@@ -97,6 +97,15 @@ describe('destroyMutation', () => {
         }),
       })
     })
+    it('throws if no id or where is provided', async (): Promise<void> => {
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation destroy {
+          destroyCustomer
+        }`)
+      expect(result.errors).to.exist
+      expect(result.data).to.equal(null)
+    })
     it('allows passing id separately', async (): Promise<void> => {
       const {id} = await Customer.create({
         firstName: "Andy",

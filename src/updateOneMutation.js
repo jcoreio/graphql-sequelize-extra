@@ -50,12 +50,12 @@ export default function updateOneMutation<InitAttributes: Object, Instance: Mode
       let values = args[valuesArgName]
       if (!where) {
         where = {}
-        if (pk && !(pk in values) && !args.hasOwnProperty(pk)) {
+        if (pk && values[pk] == null && args[pk] == null) {
           throw new Error(`You must provide where or the primary key via ${pk} arg or ${valuesArgName} arg`)
         }
       }
-      if (pk && args.hasOwnProperty(pk)) where[pk] = args[pk]
-      else if (pk && values.hasOwnProperty(pk)) {
+      if (pk && args[pk] != null) where[pk] = args[pk]
+      else if (pk && values[pk] != null) {
         where[pk] = values[pk]
         delete values[pk]
       }
@@ -71,8 +71,13 @@ export default function updateOneMutation<InitAttributes: Object, Instance: Mode
         const beforeResult = await before(doc, args, context, info)
         if (beforeResult) values = beforeResult
       }
-      await model.update(values, finalUpdateOptions)
-      const instance: ?Instance = await model.findOne({where})
+      const [
+        numUpdated, // eslint-disable-line no-unused-vars
+        updatedRows,
+      ] = await model.update(values, finalUpdateOptions)
+      const instance: ?Instance = Array.isArray(updatedRows) && updatedRows.length === 1
+        ? updatedRows[0]
+        : await model.findOne({where})
       if (!instance) throw new Error(`failed to find updated ${returnType.name}`)
       if (typeof after === 'function') {
         return (await after(instance, args, context, info)) || instance

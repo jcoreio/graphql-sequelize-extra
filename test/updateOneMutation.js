@@ -108,6 +108,19 @@ describe('updateOneMutation', () => {
         }),
       })
     })
+    it('throws if no id or where is provided', async (): Promise<void> => {
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation update {
+          updateCustomer(values: {
+            firstName: "Andork",
+          }) {
+            firstName
+          }
+        }`)
+      expect(result.errors).to.exist
+      expect(result.data.updateCustomer).to.equal(null)
+    })
     it('allows passing id separately', async (): Promise<void> => {
       const {id} = await Customer.create({
         firstName: "Andy",
@@ -439,6 +452,122 @@ describe('updateOneMutation', () => {
         firstName: "ANDORK",
         lastName: "EDWARDS",
         address: "WOULDN'T YOU LIKE TO KNOW!",
+        phone: null,
+      })
+    })
+  })
+  describe('with returning: true', () => {
+    let schema: graphql.GraphQLSchema
+
+    before(() => {
+      let mutationFields = {}
+
+      for (let key in models) {
+        const model = models[key]
+        const type = types[model.options.name.singular]
+        const inputType = types[`Update${model.options.name.singular}`]
+        mutationFields[`update${model.options.name.singular}`] = updateOneMutation({
+          inputType,
+          returnType: type,
+          model,
+          updateOptions: {returning: true}
+        })
+      }
+
+      schema = new graphql.GraphQLSchema({
+        query: new graphql.GraphQLObjectType({
+          name: 'query',
+          fields: queryFields,
+        }),
+        mutation: new graphql.GraphQLObjectType({
+          name: 'mutation',
+          fields: mutationFields,
+        }),
+      })
+    })
+    it('allows passing id separately', async (): Promise<void> => {
+      const {id} = await Customer.create({
+        firstName: "Andy",
+        lastName: "Edwards",
+        address: "Wouldn't you like to know!",
+      })
+
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation update($id: Int!) {
+          updateCustomer(id: $id, values: {
+            firstName: "Andork",
+          }) {
+            firstName
+            lastName
+            address
+            phone 
+          }
+        }`,
+        null,
+        null,
+        {id})
+
+      expect(result.data.updateCustomer).to.deep.equal({
+        firstName: 'Andork',
+        lastName: 'Edwards',
+        address: "Wouldn't you like to know!",
+        phone: null,
+      })
+    })
+    it('allows passing id as part of values', async (): Promise<void> => {
+      const {id} = await Customer.create({
+        firstName: "Andy",
+        lastName: "Edwards",
+        address: "Wouldn't you like to know!",
+      })
+
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation update($values: UpdateCustomer!) {
+          updateCustomer(values: $values) {
+            firstName
+            lastName
+            address
+            phone 
+          }
+        }`,
+        null,
+        null,
+        {values: {id, firstName: 'Andork'}})
+
+      expect(result.data.updateCustomer).to.deep.equal({
+        firstName: 'Andork',
+        lastName: 'Edwards',
+        address: "Wouldn't you like to know!",
+        phone: null,
+      })
+    })
+    it('allows passing id as part of where clause', async (): Promise<void> => {
+      const {id} = await Customer.create({
+        firstName: "Andy",
+        lastName: "Edwards",
+        address: "Wouldn't you like to know!",
+      })
+
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation update($where: SequelizeJSON!, $values: UpdateCustomer!) {
+          updateCustomer(where: $where, values: $values) {
+            firstName
+            lastName
+            address
+            phone 
+          }
+        }`,
+        null,
+        null,
+        {where: {id}, values: {firstName: 'Andork'}})
+
+      expect(result.data.updateCustomer).to.deep.equal({
+        firstName: 'Andork',
+        lastName: 'Edwards',
+        address: "Wouldn't you like to know!",
         phone: null,
       })
     })
