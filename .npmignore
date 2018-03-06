@@ -3,6 +3,7 @@ coverage
 test
 scripts
 node_modules
+flow-typed
 .babelrc
 .eslintrc
 .flowconfig
