@@ -6,5 +6,10 @@ node_modules
 flow-typed
 .babelrc
 .eslintrc
-.flowconfig
 .travis.yml
+.eslintcache
+.idea
+solano.yml
+renovate.json
+commitlint.config.js
+flow-typed

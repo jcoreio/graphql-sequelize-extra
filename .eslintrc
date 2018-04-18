@@ -4,5 +4,6 @@
   ],
   "env": {
     "commonjs": true
-  }
+  },
+  "parser": "babel-eslint"
 }
