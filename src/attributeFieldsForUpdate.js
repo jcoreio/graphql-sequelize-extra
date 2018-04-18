@@ -8,6 +8,9 @@ type Options = {
   cache?: Object,
   exclude?: Array<string> | (key: string) => ?boolean,
   only?: Array<string> | (key: string) => ?boolean,
+  map?: {[key: string]: string} | ((key: string) => string),
+  commentToDescription?: boolean,
+  globalId?: boolean,
 }
 
 export default function attributeFieldsForCreate<TSource, TContext>(
