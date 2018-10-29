@@ -64,5 +64,5 @@ const types = mapValues(models,
 )
 ```
 
-Also if you have circular associations, you should [use some form of
+If you have circular associations, you should [use some form of
 nested GraphQL query attack prevention](https://stackoverflow.com/questions/37337466/how-do-you-prevent-nested-attack-on-graphql-apollo-server).
