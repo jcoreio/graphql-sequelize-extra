@@ -4,7 +4,7 @@ import type {Model} from 'sequelize'
 import * as graphql from 'graphql'
 import {attributeFields} from 'graphql-sequelize'
 
-type Options = {
+export type Options = {
   cache?: Object,
   exclude?: Array<string> | (key: string) => ?boolean,
   only?: Array<string> | (key: string) => ?boolean,
