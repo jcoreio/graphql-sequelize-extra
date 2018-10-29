@@ -66,3 +66,9 @@ const types = mapValues(models,
 
 If you have circular associations, you should [use some form of
 nested GraphQL query attack prevention](https://stackoverflow.com/questions/37337466/how-do-you-prevent-nested-attack-on-graphql-apollo-server).
+
+### Running tests
+
+To run Postgres via Docker for testing:
+
+`docker run -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -e POSTGRES_DB=graphql_sequelize_extra -p 5432:5432 postgres:10.5`
