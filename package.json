@@ -100,7 +100,7 @@
     "sequelize": "^4.0.0"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "release": {
     "verifyConditions": "condition-circle"
