@@ -1,6 +1,5 @@
 // @flow
 
-import requireEnv from '@jcoreio/require-env'
 import {describe, it, before} from 'mocha'
 import {expect} from 'chai'
 import type {Model} from 'sequelize'
@@ -11,8 +10,6 @@ import Customer from './models/Customer'
 
 import glob from 'glob'
 import path from 'path'
-
-import initDatabase from './util/initDatabase'
 
 import {destroyMutation, associationFields} from '../src'
 
@@ -27,16 +24,7 @@ describe('destroyMutation', () => {
   }
 
   before(async (): Promise<void> => {
-    await initDatabase()
-
-    const host = requireEnv('DB_HOST')
-    const database = requireEnv('DB_NAME')
-    const user = requireEnv('DB_USER')
-    const password = requireEnv('DB_PASSWORD')
-    sequelize = new Sequelize(database, user, password, {
-      host,
-      dialect: 'postgres'
-    })
+    sequelize = new Sequelize('sqlite::memory:')
 
     const modelFiles = glob.sync(path.join(__dirname, 'models', '*.js'))
     modelFiles.forEach((file: string) => {
