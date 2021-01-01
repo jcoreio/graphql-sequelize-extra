@@ -11,7 +11,6 @@ some missing pieces of the graphql-sequelize bridge
 # Installation
 
 ```sh
-<<<<<<< HEAD
 npm install --save @jcoreio/graphql-sequelize-extra
 ```
 
