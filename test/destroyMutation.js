@@ -1,17 +1,17 @@
 // @flow
 
-import {describe, it, before} from 'mocha'
-import {expect} from 'chai'
-import type {Model} from 'sequelize'
+import { describe, it, before } from 'mocha'
+import { expect } from 'chai'
+import type { Model } from 'sequelize'
 import * as graphql from 'graphql'
-import {attributeFields, resolver} from 'graphql-sequelize'
+import { attributeFields, resolver } from '@jcoreio/graphql-sequelize'
 import Sequelize from 'sequelize'
 import Customer from './models/Customer'
 
 import glob from 'glob'
 import path from 'path'
 
-import {destroyMutation, associationFields} from '../src'
+import { destroyMutation, associationFields } from '../src'
 
 describe('destroyMutation', () => {
   let types = {}
@@ -30,7 +30,7 @@ describe('destroyMutation', () => {
     modelFiles.forEach((file: string) => {
       // $FlowFixMe
       const model = require(file).default
-      if (model && model.initAttributes) model.initAttributes({sequelize})
+      if (model && model.initAttributes) model.initAttributes({ sequelize })
     })
     modelFiles.forEach((file: string) => {
       // $FlowFixMe
@@ -48,8 +48,8 @@ describe('destroyMutation', () => {
         name: model.options.name.singular,
         fields: () => ({
           ...attributeFields(model),
-          ...associationFields(model, {getType}),
-        })
+          ...associationFields(model, { getType }),
+        }),
       })
       types[type.name] = type
       queryFields[model.options.name.singular] = {
@@ -71,7 +71,9 @@ describe('destroyMutation', () => {
 
       for (let key in models) {
         const model = models[key]
-        mutationFields[`destroy${model.options.name.singular}`] = destroyMutation({model})
+        mutationFields[
+          `destroy${model.options.name.singular}`
+        ] = destroyMutation({ model })
       }
 
       schema = new graphql.GraphQLSchema({
@@ -90,14 +92,15 @@ describe('destroyMutation', () => {
         schema,
         `mutation destroy {
           destroyCustomer
-        }`)
+        }`
+      )
       expect(result.errors).to.exist
       expect(result.data).to.equal(null)
     })
     it('allows passing id separately', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -108,15 +111,16 @@ describe('destroyMutation', () => {
         }`,
         null,
         null,
-        {id})
+        { id }
+      )
 
       expect(result.data.destroyCustomer).to.equal(1)
-      expect(await Customer.findOne({where: {id}})).to.not.exist
+      expect(await Customer.findOne({ where: { id } })).to.not.exist
     })
     it('allows passing where clause', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -127,20 +131,21 @@ describe('destroyMutation', () => {
         }`,
         null,
         null,
-        {where: {id}})
+        { where: { id } }
+      )
 
       expect(result.data.destroyCustomer).to.equal(1)
-      expect(await Customer.findOne({where: {id}})).to.not.exist
+      expect(await Customer.findOne({ where: { id } })).to.not.exist
     })
     it('can destroy multiple', async (): Promise<void> => {
       await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
       await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -151,10 +156,12 @@ describe('destroyMutation', () => {
         }`,
         null,
         null,
-        {where: {firstName: 'Andy'}})
+        { where: { firstName: 'Andy' } }
+      )
 
       expect(result.data.destroyCustomer).to.be.above(1)
-      expect(await Customer.findOne({where: {firstName: 'Andy'}})).to.not.exist
+      expect(await Customer.findOne({ where: { firstName: 'Andy' } })).to.not
+        .exist
     })
   })
 
@@ -166,10 +173,13 @@ describe('destroyMutation', () => {
 
       for (let key in models) {
         const model = models[key]
-        mutationFields[`destroy${model.options.name.singular}`] = destroyMutation({
+        mutationFields[
+          `destroy${model.options.name.singular}`
+        ] = destroyMutation({
           model,
           before: (source: any, args: any, context: Object) => {
-            if (context.userId == null) throw new Error('you must be logged in to destroy')
+            if (context.userId == null)
+              throw new Error('you must be logged in to destroy')
           },
         })
       }
@@ -186,9 +196,9 @@ describe('destroyMutation', () => {
       })
     })
     it("throws if userId isn't given", async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -199,7 +209,8 @@ describe('destroyMutation', () => {
         }`,
         null,
         null,
-        {id})
+        { id }
+      )
 
       expect(errorResult.errors).to.exist
       expect(errorResult.data).to.not.exist
@@ -210,12 +221,12 @@ describe('destroyMutation', () => {
           destroyCustomer(id: $id)
         }`,
         null,
-        {userId: 1},
-        {id})
+        { userId: 1 },
+        { id }
+      )
 
       expect(result.data.destroyCustomer).to.equal(1)
-      expect(await Customer.findOne({where: {id}})).to.not.exist
+      expect(await Customer.findOne({ where: { id } })).to.not.exist
     })
   })
 })
-

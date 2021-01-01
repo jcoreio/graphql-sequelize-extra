@@ -1,37 +1,57 @@
 // @flow
 
 import * as graphql from 'graphql'
-import type {Model, DestroyOptions} from 'sequelize'
-import {defaultArgs} from 'graphql-sequelize'
+import type { Model, DestroyOptions } from 'sequelize'
+import { defaultArgs } from '@jcoreio/graphql-sequelize'
 
-export type Options<InitAttributes: Object, Instance: Model<any, InitAttributes>, Source = any, Context = any> = {
+export type Options<
+  InitAttributes: Object,
+  Instance: Model<any, InitAttributes>,
+  Source = any,
+  Context = any
+> = {|
   model: Class<Instance>,
   before?: (
     source: Source,
-    args: {[argName: string]: any},
+    args: { [argName: string]: any, ... },
     context: Context,
     info: graphql.GraphQLResolveInfo
   ) => any,
   after?: (
     source: number,
-    args: {[argName: string]: any},
+    args: { [argName: string]: any, ... },
     context: Context,
     info: graphql.GraphQLResolveInfo
   ) => any,
-  destroyOptions?: DestroyOptions,
-}
+  destroyOptions?: DestroyOptions<any>,
+|}
 
-export default function destroyMutation<InitAttributes: Object, Instance: Model<any, InitAttributes>, Source, Context>({
+export default function destroyMutation<
+  InitAttributes: Object,
+  Instance: Model<any, InitAttributes>,
+  Source,
+  Context
+>({
   model,
   before,
   after,
   destroyOptions,
-}: Options<InitAttributes, Instance, Source, Context>): graphql.GraphQLFieldConfig<Source, Context> {
+}: Options<
+  InitAttributes,
+  Instance,
+  Source,
+  Context
+>): graphql.GraphQLFieldConfig<Source, Context> {
   return {
     type: new graphql.GraphQLNonNull(graphql.GraphQLInt),
     args: defaultArgs(model),
-    resolve: async (doc: any, args: Object, context: Context, info: graphql.GraphQLResolveInfo): Promise<number> => {
-      let {where} = args
+    resolve: async (
+      doc: any,
+      args: Object,
+      context: Context,
+      info: graphql.GraphQLResolveInfo
+    ): Promise<number> => {
+      let { where } = args
       const pk = model.primaryKeyAttribute
       if (!where) {
         where = {}
@@ -42,10 +62,11 @@ export default function destroyMutation<InitAttributes: Object, Instance: Model<
       if (pk && args[pk] != null) where[pk] = args[pk]
       let finalDestroyOptions
       if (destroyOptions) {
-        if (destroyOptions.where) where = {...where, ...(destroyOptions.where: any)}
-        finalDestroyOptions = {...destroyOptions, where}
+        if (destroyOptions.where)
+          where = { ...where, ...(destroyOptions.where: any) }
+        finalDestroyOptions = { ...destroyOptions, where }
       } else {
-        finalDestroyOptions = {where}
+        finalDestroyOptions = { where }
       }
 
       if (typeof before === 'function') {
@@ -59,4 +80,3 @@ export default function destroyMutation<InitAttributes: Object, Instance: Model<
     },
   }
 }
-

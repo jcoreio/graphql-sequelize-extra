@@ -13,4 +13,3 @@ exports.attributeFieldsForUpdate = attributeFieldsForUpdate
 exports.createMutation = createMutation
 exports.updateOneMutation = updateOneMutation
 exports.destroyMutation = destroyMutation
-

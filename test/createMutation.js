@@ -1,16 +1,20 @@
 // @flow
 
-import {describe, it, before} from 'mocha'
-import {expect} from 'chai'
-import type {Model} from 'sequelize'
+import { describe, it, before } from 'mocha'
+import { expect } from 'chai'
+import type { Model } from 'sequelize'
 import * as graphql from 'graphql'
-import {attributeFields, resolver} from 'graphql-sequelize'
+import { attributeFields, resolver } from '@jcoreio/graphql-sequelize'
 import Sequelize from 'sequelize'
 
 import glob from 'glob'
 import path from 'path'
 
-import {createMutation, associationFields, attributeFieldsForCreate} from '../src'
+import {
+  createMutation,
+  associationFields,
+  attributeFieldsForCreate,
+} from '../src'
 
 describe('createMutation', () => {
   let types = {}
@@ -29,7 +33,7 @@ describe('createMutation', () => {
     modelFiles.forEach((file: string) => {
       // $FlowFixMe
       const model = require(file).default
-      if (model && model.initAttributes) model.initAttributes({sequelize})
+      if (model && model.initAttributes) model.initAttributes({ sequelize })
     })
     modelFiles.forEach((file: string) => {
       // $FlowFixMe
@@ -47,8 +51,8 @@ describe('createMutation', () => {
         name: model.options.name.singular,
         fields: () => ({
           ...attributeFields(model),
-          ...associationFields(model, {getType}),
-        })
+          ...associationFields(model, { getType }),
+        }),
       })
       types[type.name] = type
       const inputType = new graphql.GraphQLInputObjectType({
@@ -77,11 +81,13 @@ describe('createMutation', () => {
         const model = models[key]
         const type = types[model.options.name.singular]
         const inputType = types[`Create${model.options.name.singular}`]
-        mutationFields[`create${model.options.name.singular}`] = createMutation({
-          inputType,
-          returnType: type,
-          model,
-        })
+        mutationFields[`create${model.options.name.singular}`] = createMutation(
+          {
+            inputType,
+            returnType: type,
+            model,
+          }
+        )
       }
 
       schema = new graphql.GraphQLSchema({
@@ -96,7 +102,9 @@ describe('createMutation', () => {
       })
     })
     it('works', async (): Promise<void> => {
-      const result: any = await graphql.graphql(schema, `mutation {
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation {
         createCustomer(values: {
           firstName: "Andy",
           lastName: "Edwards",
@@ -107,7 +115,8 @@ describe('createMutation', () => {
           address
           phone 
         }
-      }`)
+      }`
+      )
       expect(result.data.createCustomer).to.deep.equal({
         firstName: 'Andy',
         lastName: 'Edwards',
@@ -125,12 +134,14 @@ describe('createMutation', () => {
         const model = models[key]
         const type = types[model.options.name.singular]
         const inputType = types[`Create${model.options.name.singular}`]
-        mutationFields[`create${model.options.name.singular}`] = createMutation({
-          inputType,
-          returnType: type,
-          model,
-          valuesArgName: model.options.name.singular,
-        })
+        mutationFields[`create${model.options.name.singular}`] = createMutation(
+          {
+            inputType,
+            returnType: type,
+            model,
+            valuesArgName: model.options.name.singular,
+          }
+        )
       }
 
       schema = new graphql.GraphQLSchema({
@@ -145,7 +156,9 @@ describe('createMutation', () => {
       })
     })
     it('works', async (): Promise<void> => {
-      const result: any = await graphql.graphql(schema, `mutation {
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation {
         createCustomer(Customer: {
           firstName: "Andy",
           lastName: "Edwards",
@@ -156,7 +169,8 @@ describe('createMutation', () => {
           address
           phone 
         }
-      }`)
+      }`
+      )
       expect(result.data.createCustomer).to.deep.equal({
         firstName: 'Andy',
         lastName: 'Edwards',
@@ -174,19 +188,22 @@ describe('createMutation', () => {
         const model = models[key]
         const type = types[model.options.name.singular]
         const inputType = types[`Create${model.options.name.singular}`]
-        mutationFields[`create${model.options.name.singular}`] = createMutation({
-          inputType,
-          returnType: type,
-          model,
-          before: (source: any, {values}: {values: Object}) => {
-            const result = {}
-            for (let key in values) {
-              if (typeof values[key] === 'string') result[key] = values[key].toUpperCase()
-              else result[key] = values[key]
-            }
-            return result
-          },
-        })
+        mutationFields[`create${model.options.name.singular}`] = createMutation(
+          {
+            inputType,
+            returnType: type,
+            model,
+            before: (source: any, { values }: { values: Object }): Object => {
+              const result = {}
+              for (let key in values) {
+                if (typeof values[key] === 'string')
+                  result[key] = values[key].toUpperCase()
+                else result[key] = values[key]
+              }
+              return result
+            },
+          }
+        )
       }
 
       schema = new graphql.GraphQLSchema({
@@ -201,7 +218,9 @@ describe('createMutation', () => {
       })
     })
     it('works', async (): Promise<void> => {
-      const result: any = await graphql.graphql(schema, `mutation {
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation {
         createCustomer(values: {
           firstName: "Andy",
           lastName: "Edwards",
@@ -212,7 +231,8 @@ describe('createMutation', () => {
           address
           phone 
         }
-      }`)
+      }`
+      )
       expect(result.data.createCustomer).to.deep.equal({
         firstName: 'ANDY',
         lastName: 'EDWARDS',
@@ -230,14 +250,16 @@ describe('createMutation', () => {
         const model = models[key]
         const type = types[model.options.name.singular]
         const inputType = types[`Create${model.options.name.singular}`]
-        mutationFields[`create${model.options.name.singular}`] = createMutation({
-          inputType,
-          returnType: type,
-          model,
-          after: (instance: any) => {
-            return instance.get({plain: true, raw: true})
+        mutationFields[`create${model.options.name.singular}`] = createMutation(
+          {
+            inputType,
+            returnType: type,
+            model,
+            after: (instance: any): Promise<Object> => {
+              return instance.get({ plain: true, raw: true })
+            },
           }
-        })
+        )
       }
 
       schema = new graphql.GraphQLSchema({
@@ -252,7 +274,9 @@ describe('createMutation', () => {
       })
     })
     it('works', async (): Promise<void> => {
-      const result: any = await graphql.graphql(schema, `mutation {
+      const result: any = await graphql.graphql(
+        schema,
+        `mutation {
         createCustomer(values: {
           firstName: "Andy",
           lastName: "Edwards",
@@ -263,7 +287,8 @@ describe('createMutation', () => {
           address
           phone 
         }
-      }`)
+      }`
+      )
       expect(result.data.createCustomer).to.deep.equal({
         firstName: 'Andy',
         lastName: 'Edwards',
@@ -273,4 +298,3 @@ describe('createMutation', () => {
     })
   })
 })
-

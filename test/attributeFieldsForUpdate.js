@@ -1,8 +1,8 @@
 // @flow
 
-import {describe, it, before} from 'mocha'
-import {expect} from 'chai'
-import type {Model} from 'sequelize'
+import { describe, it, before } from 'mocha'
+import { expect } from 'chai'
+import type { Model } from 'sequelize'
 import * as graphql from 'graphql'
 import mapValues from 'lodash.mapvalues'
 import Sequelize from 'sequelize'
@@ -10,26 +10,20 @@ import Sequelize from 'sequelize'
 import glob from 'glob'
 import path from 'path'
 
-import {attributeFieldsForUpdate} from '../src'
+import { attributeFieldsForUpdate } from '../src'
 
 describe('attributeFieldsForUpdate', () => {
   let sequelize
   let models
 
   before(() => {
-    sequelize = new Sequelize({
-      host: 'localhost',
-      database: 'database',
-      user: 'user',
-      password: 'password',
-      dialect: 'postgres'
-    })
+    sequelize = new Sequelize('sqlite::memory:')
 
     const modelFiles = glob.sync(path.join(__dirname, 'models', '*.js'))
     modelFiles.forEach((file: string) => {
       // $FlowFixMe
       const model = require(file).default
-      if (model && model.initAttributes) model.initAttributes({sequelize})
+      if (model && model.initAttributes) model.initAttributes({ sequelize })
     })
     modelFiles.forEach((file: string) => {
       // $FlowFixMe
@@ -41,7 +35,9 @@ describe('attributeFieldsForUpdate', () => {
   })
 
   it('works', () => {
-    const fields = mapValues(models, (model: Class<Model<any>>) => attributeFieldsForUpdate(model))
+    const fields = mapValues(models, (model: Class<Model<any>>) =>
+      attributeFieldsForUpdate(model)
+    )
     expect(fields.Customer.firstName).to.deep.equal({
       type: graphql.GraphQLString,
     })
@@ -61,9 +57,11 @@ describe('attributeFieldsForUpdate', () => {
     expect(fields.Customer.updatedAt).to.not.exist
   })
   it('supports exclude array', () => {
-    const fields = mapValues(models, (model: Class<Model<any>>) => attributeFieldsForUpdate(model, {
-      exclude: ['lastName', 'phone'],
-    }))
+    const fields = mapValues(models, (model: Class<Model<any>>) =>
+      attributeFieldsForUpdate(model, {
+        exclude: ['lastName', 'phone'],
+      })
+    )
     expect(fields.Customer.firstName).to.deep.equal({
       type: graphql.GraphQLString,
     })
@@ -79,9 +77,11 @@ describe('attributeFieldsForUpdate', () => {
     expect(fields.Customer.updatedAt).to.not.exist
   })
   it('supports exclude function', () => {
-    const fields = mapValues(models, (model: Class<Model<any>>) => attributeFieldsForUpdate(model, {
-      exclude: key => key === 'lastName' || key === 'phone'
-    }))
+    const fields = mapValues(models, (model: Class<Model<any>>) =>
+      attributeFieldsForUpdate(model, {
+        exclude: (key) => key === 'lastName' || key === 'phone',
+      })
+    )
     expect(fields.Customer.firstName).to.deep.equal({
       type: graphql.GraphQLString,
     })

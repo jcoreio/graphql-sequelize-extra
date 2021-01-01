@@ -1,17 +1,21 @@
 // @flow
 
-import {describe, it, before} from 'mocha'
-import {expect} from 'chai'
-import type {Model} from 'sequelize'
+import { describe, it, before } from 'mocha'
+import { expect } from 'chai'
+import type { Model } from 'sequelize'
 import * as graphql from 'graphql'
-import {attributeFields, resolver} from 'graphql-sequelize'
+import { attributeFields, resolver } from '@jcoreio/graphql-sequelize'
 import Sequelize from 'sequelize'
 import Customer from './models/Customer'
 
 import glob from 'glob'
 import path from 'path'
 
-import {updateOneMutation, associationFields, attributeFieldsForUpdate} from '../src'
+import {
+  updateOneMutation,
+  associationFields,
+  attributeFieldsForUpdate,
+} from '../src'
 
 describe('updateOneMutation', () => {
   let types = {}
@@ -30,7 +34,7 @@ describe('updateOneMutation', () => {
     modelFiles.forEach((file: string) => {
       // $FlowFixMe
       const model = require(file).default
-      if (model && model.initAttributes) model.initAttributes({sequelize})
+      if (model && model.initAttributes) model.initAttributes({ sequelize })
     })
     modelFiles.forEach((file: string) => {
       // $FlowFixMe
@@ -48,8 +52,8 @@ describe('updateOneMutation', () => {
         name: model.options.name.singular,
         fields: () => ({
           ...attributeFields(model),
-          ...associationFields(model, {getType}),
-        })
+          ...associationFields(model, { getType }),
+        }),
       })
       types[type.name] = type
       const inputType = new graphql.GraphQLInputObjectType({
@@ -78,7 +82,9 @@ describe('updateOneMutation', () => {
         const model = models[key]
         const type = types[model.options.name.singular]
         const inputType = types[`Update${model.options.name.singular}`]
-        mutationFields[`update${model.options.name.singular}`] = updateOneMutation({
+        mutationFields[
+          `update${model.options.name.singular}`
+        ] = updateOneMutation({
           inputType,
           returnType: type,
           model,
@@ -105,14 +111,15 @@ describe('updateOneMutation', () => {
           }) {
             firstName
           }
-        }`)
+        }`
+      )
       expect(result.errors).to.exist
       expect(result.data.updateCustomer).to.equal(null)
     })
     it('allows passing id separately', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -130,7 +137,8 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {id})
+        { id }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
         firstName: 'Andork',
@@ -140,9 +148,9 @@ describe('updateOneMutation', () => {
       })
     })
     it('allows passing id as part of values', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -158,7 +166,8 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {values: {id, firstName: 'Andork'}})
+        { values: { id, firstName: 'Andork' } }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
         firstName: 'Andork',
@@ -168,9 +177,9 @@ describe('updateOneMutation', () => {
       })
     })
     it('allows passing id as part of where clause', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -186,7 +195,8 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {where: {id}, values: {firstName: 'Andork'}})
+        { where: { id }, values: { firstName: 'Andork' } }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
         firstName: 'Andork',
@@ -206,14 +216,17 @@ describe('updateOneMutation', () => {
         const model = models[key]
         const type = types[model.options.name.singular]
         const inputType = types[`Update${model.options.name.singular}`]
-        mutationFields[`update${model.options.name.singular}`] = updateOneMutation({
+        mutationFields[
+          `update${model.options.name.singular}`
+        ] = updateOneMutation({
           inputType,
           returnType: type,
           model,
-          before: (source: any, {values}: {values: Object}) => {
+          before: (source: any, { values }: { values: Object }): Object => {
             const result = {}
             for (let key in values) {
-              if (typeof values[key] === 'string') result[key] = values[key].toUpperCase()
+              if (typeof values[key] === 'string')
+                result[key] = values[key].toUpperCase()
               else result[key] = values[key]
             }
             return result
@@ -233,9 +246,9 @@ describe('updateOneMutation', () => {
       })
     })
     it('allows passing id separately', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -253,17 +266,18 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {id})
+        { id }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
-        firstName: "ANDORK",
-        lastName: "Edwards",
+        firstName: 'ANDORK',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
         phone: null,
       })
     })
     it('allows passing id as part of values', async (): Promise<void> => {
-      const {id} = await Customer.create({
+      const { id } = await Customer.create({
         firstName: 'Andy',
         lastName: 'Edwards',
         address: "Wouldn't you like to know!",
@@ -281,19 +295,20 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {values: {id, firstName: 'Andork'}})
+        { values: { id, firstName: 'Andork' } }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
-        firstName: "ANDORK",
-        lastName: "Edwards",
+        firstName: 'ANDORK',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
         phone: null,
       })
     })
     it('allows passing id as part of where clause', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -309,11 +324,12 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {where: {id}, values: {firstName: 'Andork'}})
+        { where: { id }, values: { firstName: 'Andork' } }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
-        firstName: "ANDORK",
-        lastName: "Edwards",
+        firstName: 'ANDORK',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
         phone: null,
       })
@@ -333,7 +349,9 @@ describe('updateOneMutation', () => {
         const model = models[key]
         const type = types[model.options.name.singular]
         const inputType = types[`Update${model.options.name.singular}`]
-        mutationFields[`update${model.options.name.singular}`] = updateOneMutation({
+        mutationFields[
+          `update${model.options.name.singular}`
+        ] = updateOneMutation({
           inputType,
           returnType: type,
           model,
@@ -358,9 +376,9 @@ describe('updateOneMutation', () => {
       })
     })
     it('allows passing id separately', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -378,17 +396,18 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {id})
+        { id }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
-        firstName: "ANDORK",
-        lastName: "EDWARDS",
+        firstName: 'ANDORK',
+        lastName: 'EDWARDS',
         address: "WOULDN'T YOU LIKE TO KNOW!",
         phone: null,
       })
     })
     it('allows passing id as part of values', async (): Promise<void> => {
-      const {id} = await Customer.create({
+      const { id } = await Customer.create({
         firstName: 'Andy',
         lastName: 'Edwards',
         address: "Wouldn't you like to know!",
@@ -406,19 +425,20 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {values: {id, firstName: 'Andork'}})
+        { values: { id, firstName: 'Andork' } }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
-        firstName: "ANDORK",
-        lastName: "EDWARDS",
+        firstName: 'ANDORK',
+        lastName: 'EDWARDS',
         address: "WOULDN'T YOU LIKE TO KNOW!",
         phone: null,
       })
     })
     it('allows passing id as part of where clause', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -434,11 +454,12 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {where: {id}, values: {firstName: 'Andork'}})
+        { where: { id }, values: { firstName: 'Andork' } }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
-        firstName: "ANDORK",
-        lastName: "EDWARDS",
+        firstName: 'ANDORK',
+        lastName: 'EDWARDS',
         address: "WOULDN'T YOU LIKE TO KNOW!",
         phone: null,
       })
@@ -454,11 +475,13 @@ describe('updateOneMutation', () => {
         const model = models[key]
         const type = types[model.options.name.singular]
         const inputType = types[`Update${model.options.name.singular}`]
-        mutationFields[`update${model.options.name.singular}`] = updateOneMutation({
+        mutationFields[
+          `update${model.options.name.singular}`
+        ] = updateOneMutation({
           inputType,
           returnType: type,
           model,
-          updateOptions: {returning: true}
+          updateOptions: { returning: true },
         })
       }
 
@@ -474,9 +497,9 @@ describe('updateOneMutation', () => {
       })
     })
     it('allows passing id separately', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -494,7 +517,8 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {id})
+        { id }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
         firstName: 'Andork',
@@ -504,9 +528,9 @@ describe('updateOneMutation', () => {
       })
     })
     it('allows passing id as part of values', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -522,7 +546,8 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {values: {id, firstName: 'Andork'}})
+        { values: { id, firstName: 'Andork' } }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
         firstName: 'Andork',
@@ -532,9 +557,9 @@ describe('updateOneMutation', () => {
       })
     })
     it('allows passing id as part of where clause', async (): Promise<void> => {
-      const {id} = await Customer.create({
-        firstName: "Andy",
-        lastName: "Edwards",
+      const { id } = await Customer.create({
+        firstName: 'Andy',
+        lastName: 'Edwards',
         address: "Wouldn't you like to know!",
       })
 
@@ -550,7 +575,8 @@ describe('updateOneMutation', () => {
         }`,
         null,
         null,
-        {where: {id}, values: {firstName: 'Andork'}})
+        { where: { id }, values: { firstName: 'Andork' } }
+      )
 
       expect(result.data.updateCustomer).to.deep.equal({
         firstName: 'Andork',

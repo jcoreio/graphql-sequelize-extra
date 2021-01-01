@@ -1,9 +1,0 @@
-{
-  "presets": [["env", {"targets": {"node": "current"}}], "stage-1", "flow"],
-  "plugins": ["transform-runtime"],
-  "env": {
-    "test": {
-      "plugins": ["istanbul"]
-    }
-  }
-}
