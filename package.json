@@ -95,7 +95,6 @@
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
     "codecov": "^3.8.1",
-    "condition-circle": "^2.0.1",
     "copy": "^0.3.2",
     "cross-env": "^7.0.3",
     "es6-promisify": "^6.0.0",
@@ -130,8 +129,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "release": {
-    "verifyConditions": "condition-circle"
   }
 }
