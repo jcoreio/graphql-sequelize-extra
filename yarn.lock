@@ -1066,10 +1066,10 @@
   resolved "https://registry.npmjs.org/@istanbuljs/schema/-/schema-0.1.2.tgz#26520bf09abe4a5644cd5414e37125a8954241dd"
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
-"@jcoreio/graphql-sequelize@^2.0.0":
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/@jcoreio/graphql-sequelize/-/graphql-sequelize-2.1.0.tgz#901e40779c743131df58f44b939b7c8dd7184831"
-  integrity sha512-+vMfxAuPhFlrStNR3/YFgBO9mMPuDP62NW91nMXEu7E0KEfAQhcuoeRkSZYBYnl10Uw+82wagS7GRN7C5mE43A==
+"@jcoreio/graphql-sequelize@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.npmjs.org/@jcoreio/graphql-sequelize/-/graphql-sequelize-2.1.1.tgz#f4a4a14ec48b92fb50fb24c503b4c6dd48da01df"
+  integrity sha512-dHXRncIlc1vrv4vWHIuIHFA264mWiuCxL+qIjIn3PL40iU5rsz0HJ/plogtG0XADBAz7YaDP0ZXU42UWYjFcBw==
   dependencies:
     "@babel/runtime" "^7.12.5"
     invariant "^2.2.4"
